@@ -9,7 +9,7 @@ To build the project, use maven:
 mvn clean install
 ```
 
-The quickest way to get run the app is with Docker Compose
+The quickest way to run the project is with Docker Compose
 ```
 docker-compose up
 ```
