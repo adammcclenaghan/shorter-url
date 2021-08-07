@@ -2,6 +2,7 @@ package com.example.accessingmongodbdatarest.model;
 
 import org.springframework.data.annotation.Id;
 
+//TODO: The name 'ShortUrl' is confusing when there is a member variable with the same name.
 public class ShortUrl
 {
     public String getBaseUrl()

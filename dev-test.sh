@@ -1,5 +1,6 @@
-curl http://localhost:8080/shortUrl
+# TODO: For some reason at the moment shortUrls and POST to shortUrls works...
+curl http://localhost:8080/shortUrls
 
-curl -i -X POST -H "Content-Type:application/json" -d "{\"shortUrl\": \"hello\"}" http://localhost:8080/shortUrl
+curl -i -X POST -H "Content-Type:application/json" -d "{\"baseUrl\": \"hello.com\"}" http://localhost:8080/shortUrls
 
-curl http://localhost:8080/shortUrl
+curl http://localhost:8080/shortUrls
