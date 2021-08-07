@@ -2,13 +2,14 @@ package com.example.accessingmongodbdatarest.dao;
 
 import com.example.accessingmongodbdatarest.model.ShortUrl;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.List;
-
-@RepositoryRestResource(collectionResourceRel = "shortUrl", path = "shortUrl")
+@CrossOrigin
+@RepositoryRestResource(collectionResourceRel = "shortUrl")
 public interface MongoShortUrlDao extends MongoRepository<ShortUrl, String>
 {
-    List<String> findByBaseUrl(@Param("baseUrl") String baseUrl);
+    ShortUrl findByBaseUrl(final String baseUrl);
+
+    ShortUrl findByShortUrl(final String shortUrl);
 }
