@@ -1,8 +1,130 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom'
 
+const Home = (props) => {
+  /*
+  This prop is used to determine whether we've arrived at the home page
+  after a failed API call. If we did, we'll display a helpful message
+  */
+  const [apiFailed, setApiFailed] = useState(props.apiFailed)
 
+  //TODO: Refactor this to be more DRY
+  if (apiFailed) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <p>Sorry, the shortened URL could not be mapped. Please create a shortened URL below</p>
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Enter a long URL to shorten
+          </p>
+            <FormComponent />
+        </header>
+      </div>
+      )
+  }
+
+  return (
+  <div className="App">
+    <header className="App-header">
+      <img src={logo} className="App-logo" alt="logo" />
+      <p>
+        Enter a long URL to shorten
+      </p>
+        <FormComponent />
+    </header>
+  </div>
+  )
+}
+
+// We will attempt to redirect any calls under / by the shortUrl provided
+const RedirectFromShortUrl = (props) => {
+ return (
+   <ShortUrlRedirect shortUrl={props.shortUrl}/>
+ )
+}
+
+function ShortUrlRedirect(props) {
+  const [shortUrl, setShortUrl] = useState(props.shortUrl);
+  const [returnHome, setReturnHome] = useState(false);
+
+  useEffect(async () => {
+    const shortUrlToReq = shortUrl.replace(/^\/|\/$/g, '');
+    const apiBase = "http://localhost:8080/";
+    const apiGetLongUrl = "shortUrl/getLongFromShort";
+    
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ shortUrl: shortUrlToReq})
+    };
+    
+    fetch(apiBase + apiGetLongUrl, requestOptions)
+    .then(response => {
+      if (response.ok) {
+        console.log("API call for long URL OK");
+        return response.text();
+      }
+      throw response;
+    })
+    .then(data => {
+      // Data holds the URL that we should redirect to.
+      // An empty string means that no entry exists for this shortUrl
+      console.log("API call complete");
+      if (data === "") {
+        console.log("API returned nothing");
+        //TODO: Something if we don't have a mapping
+        setReturnHome(true);
+      }
+      else
+      {
+        // Text will start with " and end with " so trim this
+        data = data.substring(1, data.length - 1);
+
+        // If the URL returned doesn't start with http:// we append it
+        if (!data.startsWith("http://"))
+        {
+          data = "http://" + data;
+        }
+
+        console.log("Setting window location to : " + data);
+        window.location.href = data;
+      }
+    })
+    .catch( err => {
+      console.log("API call failed");
+      /*
+      This could be improved to set different state values for apiFailed vs
+      a shortUrl not existing in the db. Would mean that a more helpful msg
+      could be shown on the home page after redirecting
+      */
+      setReturnHome(true);
+    })
+  }, []);
+
+  if (returnHome)
+  {
+    return (
+      <Home apiFailed={true}/>
+    )
+  }
+  else{
+    return (
+      <p> Loading ... </p>
+    )
+  }
+}
+
+/*
+Component used to send a call to the API
+*/
 class FormComponent extends React.Component {
 
   constructor(props) {
@@ -25,6 +147,8 @@ class FormComponent extends React.Component {
       const apiBase = "http://localhost:8080/";
       const apiCreate = apiBase + "shortUrl/create";
 
+      const redirectBase = "http://localhost:3000/";
+
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
@@ -34,20 +158,17 @@ class FormComponent extends React.Component {
       fetch(apiCreate, requestOptions)
       .then(response => {
         if (response.ok) {
-          console.log("Response OK");
           return response.json();
         }
         throw response;
       })
       .then(data => {
         console.log(data.shortUrl);
-        this.setState({ shortUrl: "Short URL: " + apiBase + data.shortUrl });
+        this.setState({ shortUrl: "Short URL: " + redirectBase + data.shortUrl });
       })
       .catch (error => {
         console.error("Error fetching data: ", error);
       })
-      //.finally( () => {
-        //setLoading(false);//})
 
       event.preventDefault();
     }
@@ -69,19 +190,19 @@ class FormComponent extends React.Component {
     }    
 }
 
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Enter a long URL to shorten
-        </p>
-          <FormComponent />
-      </header>
-    </div>
-  );
+    <Router>
+      <Switch>
+        <Route path="/" exact>
+          <Home />
+        </Route>
+        <Route path='*' render={(props) => (
+          <RedirectFromShortUrl shortUrl={props.match.url} />
+         )} />
+      </Switch>
+    </Router>
+  )
 }
 
 export default App;
