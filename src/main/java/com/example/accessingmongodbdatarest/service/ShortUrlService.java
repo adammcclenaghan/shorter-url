@@ -47,14 +47,21 @@ public class ShortUrlService
 
     /**
      * Get the long URL associated with a shortUrl
-     * @param shortUrl
-     * @return
+     * @param shortUrl  The short URL to lookup in the db
+     * @return          The long URL related to this short URL
      */
     public String getLongUrlByShort(final String shortUrl)
     {
         ShortUrl urlEntry = mongoRepository.findByShortUrl(shortUrl);
         // TODO: Exception handling when no entry for this long url exists.
-
-        return urlEntry.getShortUrl();
+        if (urlEntry != null)
+        {
+            return urlEntry.getBaseUrl();
+        }
+        else
+        {
+            //TODO: Throw here. Caller should catch and return something reasonable
+            return null;
+        }
     }
 }
