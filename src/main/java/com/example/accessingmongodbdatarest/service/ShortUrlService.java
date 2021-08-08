@@ -20,17 +20,20 @@ public class ShortUrlService
 
     public ShortUrlService() {}
 
+    /**
+     * Get all of the URL db entries.
+     * @return A list of all URL db entries.
+     */
     public List<UrlDbEntry> getUrls()
     {
         return mongoRepository.findAll();
     }
 
-    //TODO: Update javadoc for these methods
     /**
      * Given a long URL, create a short URL entry in the DB and set the shortUrl value on
      * the passed in urlDbEntry.
-     * @param urlDbEntry                Object holding the long URL to shorten. Modified in
-     *                                  this method, the shortUrl entry will be set.
+     * @param longUrl                   The long URL to create a short URL entry for.
+     * @return                          A representation of the created db entry.
      */
     public UrlDbEntry createShortUrl(final String longUrl)
     {
@@ -54,17 +57,17 @@ public class ShortUrlService
             // No entry exists for this base url so create a new one.
 
             /*
-              This isn't  efficient but since our generator doesn't save its state between restarts
+              This isn't efficient but since our generator doesn't save its state between restarts
               (ie it doesn't save the last long value that it converted to a base62 shortUrl)
               we keep generating until we get a shortUrl value that does not already exist in the
               db. How long this takes will depend on the number of existing DB entries after a restart.
-              In a real world app there's several ways we could change the generation to try to avoid this
+              In a prod env there's several ways we could change the generation to try to avoid this
               problem and be more efficient, but this is just a learning project...
              */
             String shortUrl;
             do
             {
-                shortUrl = generator.getShortUrlFromLongUrl();
+                shortUrl = generator.generateShortUrl();
             }
             while((mongoRepository.findByShortUrl(shortUrl)) != null);
 
@@ -76,10 +79,11 @@ public class ShortUrlService
     }
 
     /**
-     * Get the long URL associated with a shortened URL, modify the passed urlDbEntry
-     * to contain this long URL value.
-     * @param urlDbEntry  Object holding the short URL to lookup in the db. Modified in
-     *                    this method, the longUrl will be set.
+     * Get the long URL associated with a shortened URL.
+     * @param shortUrl    The short URL to obtain a long URL for.
+     * @return            A representation of the created db entry containing the long URL.
+     *                    If no entry exists for the shortUrl then the returned db entry will
+     *                    contain an empty string for the long URL value.
      */
     public UrlDbEntry getLongUrlByShort(final String shortUrl)
     {

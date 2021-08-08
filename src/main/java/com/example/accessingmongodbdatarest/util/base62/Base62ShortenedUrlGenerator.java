@@ -8,10 +8,10 @@ public class Base62ShortenedUrlGenerator implements ShortenedUrlGenerator
 {
     //TODO: Unit tests
 
-    private AtomicLong counter = new AtomicLong(1);
+    private AtomicLong counter = new AtomicLong(0);
 
     @Override
-    public String getShortUrlFromLongUrl()
+    public String generateShortUrl()
     {
         final long longVal = counter.getAndIncrement();
         return Base62Converter.
@@ -24,9 +24,9 @@ public class Base62ShortenedUrlGenerator implements ShortenedUrlGenerator
     public static void main(String[] args)
     {
         Base62ShortenedUrlGenerator generator = new Base62ShortenedUrlGenerator();
-        for(int i = 0; i < 20; i++ )
+        for(int i = 0; i < 63; i++ )
         {
-            System.out.println(generator.getShortUrlFromLongUrl());
+            System.out.println(generator.generateShortUrl());
         }
     }
 }
