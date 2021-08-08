@@ -6,8 +6,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Base62ShortenedUrlGenerator implements ShortenedUrlGenerator
 {
-    //TODO: Unit tests
-
     private AtomicLong counter = new AtomicLong(0);
 
     @Override
@@ -19,7 +17,7 @@ public class Base62ShortenedUrlGenerator implements ShortenedUrlGenerator
     }
 
     /*
-    For dev testing only.
+    For dev testing.
      */
     public static void main(String[] args)
     {
