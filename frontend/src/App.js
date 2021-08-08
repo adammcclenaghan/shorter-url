@@ -57,7 +57,7 @@ function ShortUrlRedirect(props) {
   useEffect(() => {
     async function fetchLongUrl() {
       const shortUrlToReq = shortUrl.replace(/^\/|\/$/g, '');
-      const apiBase = "http://localhost:8080/";
+      const apiBase = "http://localhost:8082/";
       const apiGetLongUrl = "shortUrl/getLongFromShort";
       
       const requestOptions = {
@@ -143,7 +143,7 @@ class FormComponent extends React.Component {
   
     handleSubmit(event) {
  
-      const apiBase = "http://localhost:8080/";
+      const apiBase = "http://localhost:8082/";
       const apiCreate = apiBase + "shortUrl/create";
 
       const redirectBase = "http://localhost:3000/";
