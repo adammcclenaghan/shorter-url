@@ -70,7 +70,7 @@ function ShortUrlRedirect(props) {
     .then(response => {
       if (response.ok) {
         console.log("API call for long URL OK");
-        return response.text();
+        return response.json();
       }
       throw response;
     })
@@ -78,24 +78,25 @@ function ShortUrlRedirect(props) {
       // Data holds the URL that we should redirect to.
       // An empty string means that no entry exists for this shortUrl
       console.log("API call complete");
-      if (data === "") {
+      if (data.longUrl === "") {
         console.log("API returned nothing");
         //TODO: Something if we don't have a mapping
         setReturnHome(true);
       }
       else
       {
+        let longUrl = data.longUrl
         // Text will start with " and end with " so trim this
-        data = data.substring(1, data.length - 1);
+        //data = data.substring(1, data.length - 1);
 
         // If the URL returned doesn't start with http:// we append it
-        if (!data.startsWith("http://"))
+        if (!longUrl.startsWith("http://"))
         {
-          data = "http://" + data;
+          longUrl = "http://" + longUrl;
         }
 
-        console.log("Setting window location to : " + data);
-        window.location.href = data;
+        console.log("Setting window location to : " + longUrl);
+        window.location.href = longUrl;
       }
     })
     .catch( err => {
@@ -152,7 +153,7 @@ class FormComponent extends React.Component {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
-        body: JSON.stringify({ baseUrl: this.state.value})
+        body: JSON.stringify({ longUrl: this.state.value})
       };
 
       fetch(apiCreate, requestOptions)

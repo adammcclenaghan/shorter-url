@@ -14,3 +14,8 @@ The quickest way to run the project is with Docker Compose
 docker-compose up
 ```
 First time startup may take a few minutes while Docker builds and downloads packages
+
+Then visit
+```
+http://localhost:3000
+```

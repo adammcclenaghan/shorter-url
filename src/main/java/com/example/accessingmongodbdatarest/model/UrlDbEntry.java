@@ -2,17 +2,20 @@ package com.example.accessingmongodbdatarest.model;
 
 import org.springframework.data.annotation.Id;
 
-//TODO: The name 'ShortUrl' is confusing when there is a member variable with the same name.
-public class ShortUrl
+/**
+ * The DB entry which maps the full length long URL to a shortened
+ * URL.
+ */
+public class UrlDbEntry
 {
-    public String getBaseUrl()
+    public String getLongUrl()
     {
-        return baseUrl;
+        return longUrl;
     }
 
-    public void setBaseUrl(String baseUrl)
+    public void setLongUrl(String longUrl)
     {
-        this.baseUrl = baseUrl;
+        this.longUrl = longUrl;
     }
 
     public String getShortUrl()
@@ -27,6 +30,6 @@ public class ShortUrl
 
     @Id
     private String id;
-    private String baseUrl;
+    private String longUrl;
     private String shortUrl;
 }
