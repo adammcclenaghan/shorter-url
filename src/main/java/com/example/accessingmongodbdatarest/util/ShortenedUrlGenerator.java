@@ -5,5 +5,5 @@ public interface ShortenedUrlGenerator
     /**
      * Generates a new short URL string
      */
-    String getShortUrlFromLongUrl();
+    String generateShortUrl();
 }

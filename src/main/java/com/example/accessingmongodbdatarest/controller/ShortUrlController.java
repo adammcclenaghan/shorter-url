@@ -18,8 +18,8 @@ public class ShortUrlController
     private ShortUrlService urlService;
 
     /**
-     * A helpful API endpoint to view all entries
-     * in the DB. Not something you'd ship to prod.
+     * A helpful API endpoint to view all entries in the DB.
+     * Not something you'd ship to prod.
      * @return
      */
     @GetMapping(path = "/allUrls")
@@ -30,7 +30,7 @@ public class ShortUrlController
     }
 
     /**
-     * An API endpoint to create a short URL entry from a long URL
+     * An API endpoint to create a short URL from a long URL
      * @param urlDbEntry   The db object which contains the long URL to convert
      * @return             A representation of the added DB object. Allows callers
      *                     to determine whether the call was successful and retrieve
@@ -44,7 +44,7 @@ public class ShortUrlController
     }
 
     /**
-     * An API endpoint which gets the long URL entry from a short URL
+     * An API endpoint which gets the long URL entry based on a short URL
      * @param urlDbEntry The db object which contains the short URL to convert
      * @return         A longUrl mapped from the passed in shortUrl. Returns an
      *                 empty string if no long URL maps to this short URL.

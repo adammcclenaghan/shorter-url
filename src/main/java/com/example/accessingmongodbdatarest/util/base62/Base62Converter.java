@@ -1,9 +1,12 @@
 package com.example.accessingmongodbdatarest.util.base62;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class Base62Converter
 {
     /* Possible characters of a base62 encoded string */
-    private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    @VisibleForTesting
+    static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     private static final int BASE_62 = CHARACTERS.length();
 
@@ -16,10 +19,17 @@ public class Base62Converter
     public static String encode(long numBaseTen)
     {
         StringBuilder sb = new StringBuilder();
-        while (numBaseTen > 0)
+        if (numBaseTen == 0)
         {
-            sb.append(CHARACTERS.charAt( (int) (numBaseTen % BASE_62 )));
-            numBaseTen /= BASE_62;
+            sb.append(CHARACTERS.charAt((int) numBaseTen));
+        }
+        else
+        {
+            while (numBaseTen > 0)
+            {
+                sb.append(CHARACTERS.charAt((int) (numBaseTen % BASE_62)));
+                numBaseTen /= BASE_62;
+            }
         }
 
         return sb.reverse().toString();
