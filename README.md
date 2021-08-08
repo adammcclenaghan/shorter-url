@@ -4,12 +4,7 @@ A basic URL shortener written in Java with Spring & MognoDB , with a simple Reac
 
 ## Getting started
 
-To build the project, use maven:
-```
-mvn clean install
-```
-
-The quickest way to run the project is with Docker Compose
+The quickest way to run the project is with Docker Compose. This will build, package and run the project.
 ```
 docker-compose up
 ```
