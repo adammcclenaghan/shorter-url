@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
 } from 'react-router-dom'
 
 const Home = (props) => {
@@ -13,7 +12,7 @@ const Home = (props) => {
   This prop is used to determine whether we've arrived at the home page
   after a failed API call. If we did, we'll display a helpful message
   */
-  const [apiFailed, setApiFailed] = useState(props.apiFailed)
+  const [apiFailed, ] = useState(props.apiFailed)
 
   //TODO: Refactor this to be more DRY
   if (apiFailed) {
@@ -52,63 +51,62 @@ const RedirectFromShortUrl = (props) => {
 }
 
 function ShortUrlRedirect(props) {
-  const [shortUrl, setShortUrl] = useState(props.shortUrl);
+  const [shortUrl, ] = useState(props.shortUrl);
   const [returnHome, setReturnHome] = useState(false);
 
-  useEffect(async () => {
-    const shortUrlToReq = shortUrl.replace(/^\/|\/$/g, '');
-    const apiBase = "http://localhost:8080/";
-    const apiGetLongUrl = "shortUrl/getLongFromShort";
-    
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({ shortUrl: shortUrlToReq})
-    };
-    
-    fetch(apiBase + apiGetLongUrl, requestOptions)
-    .then(response => {
-      if (response.ok) {
-        console.log("API call for long URL OK");
-        return response.json();
-      }
-      throw response;
-    })
-    .then(data => {
-      // Data holds the URL that we should redirect to.
-      // An empty string means that no entry exists for this shortUrl
-      console.log("API call complete");
-      if (data.longUrl === "") {
-        console.log("API returned nothing");
-        //TODO: Something if we don't have a mapping
-        setReturnHome(true);
-      }
-      else
-      {
-        let longUrl = data.longUrl
-        // Text will start with " and end with " so trim this
-        //data = data.substring(1, data.length - 1);
-
-        // If the URL returned doesn't start with http:// we append it
-        if (!longUrl.startsWith("http://"))
-        {
-          longUrl = "http://" + longUrl;
+  useEffect(() => {
+    async function fetchLongUrl() {
+      const shortUrlToReq = shortUrl.replace(/^\/|\/$/g, '');
+      const apiBase = "http://localhost:8080/";
+      const apiGetLongUrl = "shortUrl/getLongFromShort";
+      
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({ shortUrl: shortUrlToReq})
+      };
+      
+      fetch(apiBase + apiGetLongUrl, requestOptions)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
         }
+        throw response;
+      })
+      .then(data => {
+        // Data holds the URL that we should redirect to.
+        // An empty string means that no entry exists for this shortUrl
+        if (data.longUrl === "") {
+          setReturnHome(true);
+        }
+        else
+        {
+          let longUrl = data.longUrl
+          // Text will start with " and end with " so trim this
+          //data = data.substring(1, data.length - 1);
+  
+          // If the URL returned doesn't start with http:// we append it
+          if (!longUrl.startsWith("http://"))
+          {
+            longUrl = "http://" + longUrl;
+          }
+  
+          window.location.href = longUrl;
+        }
+      })
+      .catch( err => {
+        console.log("API call failed");
+        /*
+        This could be improved to set different state values for apiFailed vs
+        a shortUrl not existing in the db. Would mean that a more helpful msg
+        could be shown on the home page after redirecting
+        */
+        setReturnHome(true);
+      })  
+    }
 
-        console.log("Setting window location to : " + longUrl);
-        window.location.href = longUrl;
-      }
-    })
-    .catch( err => {
-      console.log("API call failed");
-      /*
-      This could be improved to set different state values for apiFailed vs
-      a shortUrl not existing in the db. Would mean that a more helpful msg
-      could be shown on the home page after redirecting
-      */
-      setReturnHome(true);
-    })
-  }, []);
+    fetchLongUrl();
+  }, [shortUrl]);
 
   if (returnHome)
   {
@@ -164,7 +162,6 @@ class FormComponent extends React.Component {
         throw response;
       })
       .then(data => {
-        console.log(data.shortUrl);
         this.setState({ shortUrl: "Short URL: " + redirectBase + data.shortUrl });
       })
       .catch (error => {
