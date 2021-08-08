@@ -35,9 +35,22 @@ public class ShortUrlService
         else
         {
             // No entry exists for this base url so we create a new one.
-            String proposedShortUrl = generator.getShortUrlFromLongUrl();
-            // We could check here if the shortUrl already exists in the DB. We could continue
-            // to try generating short URLs until we get one that doesn't clash.
+
+            /*
+              This isn't  efficient but since our generator doesn't save its state between restarts
+              (ie it doesn't save the last long value that it converted to a base62 shortUrl)
+              we keep generating until we get a shortUrl value that does not already exist in the
+              db. How long this takes will depend on the number of existing DB entries after a restart.
+              In a real world app there's several ways we could change the generation to try to avoid this
+              problem and be more efficient, but this is just a learning project...
+             */
+            String proposedShortUrl;
+            do
+            {
+                proposedShortUrl = generator.getShortUrlFromLongUrl();
+            }
+            while((mongoRepository.findByShortUrl(proposedShortUrl)) != null);
+
             shortUrl.setShortUrl(proposedShortUrl);
             mongoRepository.save(shortUrl);
         }
