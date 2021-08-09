@@ -7,19 +7,11 @@ import {
   Switch,
 } from 'react-router-dom'
 
-const Home = (props) => {
-  /*
-  This prop is used to determine whether we've arrived at the home page
-  after a failed API call. If we did, we'll display a helpful message
-  */
-  const [apiFailed, ] = useState(props.apiFailed)
-
-  //TODO: Refactor this to be more DRY
-  if (apiFailed) {
+const Home = ({apiFailed}) => {
     return (
       <div className="App">
         <header className="App-header">
-          <p>Sorry, the shortened URL could not be mapped. Please create a shortened URL below</p>
+          {apiFailed && <p>Sorry, the shortened URL could not be mapped. Please create a shortened URL below</p>}
           <img src={logo} className="App-logo" alt="logo" />
           <p>
             Enter a long URL to shorten
@@ -28,19 +20,6 @@ const Home = (props) => {
         </header>
       </div>
       )
-  }
-
-  return (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Enter a long URL to shorten
-      </p>
-        <FormComponent />
-    </header>
-  </div>
-  )
 }
 
 // We will attempt to redirect any calls under / by the shortUrl provided
@@ -50,8 +29,7 @@ const RedirectFromShortUrl = (props) => {
  )
 }
 
-function ShortUrlRedirect(props) {
-  const [shortUrl, ] = useState(props.shortUrl);
+function ShortUrlRedirect({shortUrl}) {
   const [returnHome, setReturnHome] = useState(false);
 
   useEffect(() => {
@@ -108,17 +86,15 @@ function ShortUrlRedirect(props) {
     fetchLongUrl();
   }, [shortUrl]);
 
-  if (returnHome)
-  {
-    return (
-      <Home apiFailed={true}/>
-    )
-  }
-  else{
-    return (
-      <p> Loading ... </p>
-    )
-  }
+  return (
+    <>
+    {
+      returnHome ?
+      <Home apiFailed={true} /> :
+      <p>Loading ...</p>
+    }
+    </>
+  )
 }
 
 /*
