@@ -41,7 +41,7 @@ export class FormComponent extends React.Component {
         throw response;
       })
       .then(data => {
-        this.setState({ shortUrl: "Short URL: " + redirectBase + data.shortUrl });
+        this.setState({ shortUrl: redirectBase + data.shortUrl });
       })
       .catch(error => {
         console.error("Error fetching data: ", error);
@@ -60,7 +60,7 @@ export class FormComponent extends React.Component {
           <input type="submit" value="Shorten" />
         </form>
         <div className="show-short-url">
-          {this.state.shortUrl}
+          {this.state.shortUrl && <p>Shortened URL: <a href={this.state.shortUrl}>{this.state.shortUrl}</a></p>}
         </div>
       </div>
     );
