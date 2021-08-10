@@ -14,3 +14,5 @@ Then visit
 ```
 http://localhost:3000
 ```
+
+![usage-example](shorter-url-usage.gif)
