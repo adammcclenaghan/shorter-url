@@ -9,7 +9,8 @@ export class FormComponent extends React.Component {
     super(props);
     this.state = {
       longUrlValue: '',
-      shortUrl: ''
+      shortUrl: '',
+      submittedEmpty: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -22,30 +23,36 @@ export class FormComponent extends React.Component {
 
   handleSubmit(event) {
 
-    const apiBase = "http://localhost:8082/";
-    const apiCreate = apiBase + "shortUrl/create";
+    if (this.state.longUrlValue === "") {
+      this.setState({ submittedEmpty: true });
+    }
+    else {
+      this.setState( {submittedEmpty: false });
+      const apiBase = "http://localhost:8082/";
+      const apiCreate = apiBase + "shortUrl/create";
 
-    const redirectBase = "http://localhost:3000/";
+      const redirectBase = "http://localhost:3000/";
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ longUrl: this.state.longUrlValue })
-    };
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ longUrl: this.state.longUrlValue })
+      };
 
-    fetch(apiCreate, requestOptions)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw response;
-      })
-      .then(data => {
-        this.setState({ shortUrl: redirectBase + data.shortUrl });
-      })
-      .catch(error => {
-        console.error("Error fetching data: ", error);
-      });
+      fetch(apiCreate, requestOptions)
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw response;
+        })
+        .then(data => {
+          this.setState({ shortUrl: redirectBase + data.shortUrl });
+        })
+        .catch(error => {
+          console.error("Error fetching data: ", error);
+        });
+    }
 
     event.preventDefault();
   }
@@ -61,6 +68,7 @@ export class FormComponent extends React.Component {
         </form>
         <div className="show-short-url">
           {this.state.shortUrl && <p>Shortened URL: <a href={this.state.shortUrl}>{this.state.shortUrl}</a></p>}
+          {this.state.submittedEmpty && <p>The long URL to shorten must not be empty.</p>}
         </div>
       </div>
     );
