@@ -1,6 +1,6 @@
 # shorter-url
 
-A basic URL shortener written in Java with Spring & MognoDB , with a simple React frontend, packaged with Docker.
+A basic URL shortener written in Java with Spring & MongoDB , with a simple React frontend, packaged with Docker.
 
 ## Getting started
 
