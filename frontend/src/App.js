@@ -13,8 +13,8 @@ export const Home = ({apiFailed}) => {
     return (
       <div className="App">
         <header className="App-header">
-          {apiFailed && <p>Sorry, the shortened URL could not be mapped. Please create a shortened URL below</p>}
-          <img src={logo} className="App-logo" alt="logo" />
+          {apiFailed && <p>Sorry, the shortened URL could not be mapped. <br /> Please create a shortened URL below</p>}
+          <h1>Shorter URL</h1>
           <p>
             Enter a long URL to shorten
           </p>
