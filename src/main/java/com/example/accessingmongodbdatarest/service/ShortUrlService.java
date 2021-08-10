@@ -37,7 +37,7 @@ public class ShortUrlService
      */
     public UrlDbEntry createShortUrl(final String longUrl)
     {
-        if (longUrl == null)
+        if (longUrl == null || longUrl.isEmpty())
         {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Must supply a long URL value to shorten.");
         }
@@ -87,7 +87,7 @@ public class ShortUrlService
      */
     public UrlDbEntry getLongUrlByShort(final String shortUrl)
     {
-        if (shortUrl == null)
+        if (shortUrl == null || shortUrl.isEmpty())
         {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "Must supply a short URL value.");
         }
