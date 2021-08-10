@@ -1,4 +1,52 @@
 import React from 'react';
+import {  Form, Input, Button  } from 'antd';
+
+
+const Demo = () => {
+    const onFinish = (values) => {
+        this.handleSubmit(values);
+    }    
+
+    return (
+        <Form
+                name="basic"
+                labelCol={{
+                    span: 8,
+                }}
+                wrapperCol={{
+                    span: 16,
+                }}
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={onFinish}
+                >
+                <Form.Item
+                    label="Enter a long URL to shorten"
+                    name="longurl"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please enter a long URL to shorten!',
+                    },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                    
+                <Form.Item
+                    wrapperCol={{
+                    offset: 8,
+                    span: 16,
+                    }}
+                >
+                    <Button type="primary" htmlType="submit">
+                    Submit
+                    </Button>
+                </Form.Item>
+                </Form>
+    )
+}
 
 /*
 Component used to send a call to the API
@@ -52,7 +100,10 @@ export class FormComponent extends React.Component {
 
   render() {
     return (
-      <div>
+        <Demo  handleSubmit={this.handleSubmit} />
+    )
+
+/*       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
             <input type="text" value={this.state.longUrlValue} onChange={this.handleChange} />
@@ -64,5 +115,5 @@ export class FormComponent extends React.Component {
         </div>
       </div>
     );
-  }
+ */  }
 }
