@@ -26,8 +26,6 @@ export async function fetchLongUrl(shortUrl, setReturnHome) {
 
         else {
           let longUrl = data.longUrl;
-          // Text will start with " and end with " so trim this
-          //data = data.substring(1, data.length - 1);
           // If the URL returned doesn't start with http:// we append it
           if (!longUrl.startsWith("http://")) {
             longUrl = "http://" + longUrl;
